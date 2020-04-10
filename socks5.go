@@ -46,6 +46,9 @@ type Config struct {
 	// Defaults to stdout.
 	Logger *log.Logger
 
+	// Optional function for proxy connection
+	Proxy func(local, remote net.Conn) error
+
 	// Optional function for dialing out
 	Dial func(ctx context.Context, network, addr string) (net.Conn, error)
 }

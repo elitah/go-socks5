@@ -197,6 +197,13 @@ func (s *Server) handleConnect(ctx context.Context, conn conn, req *Request) err
 		return fmt.Errorf("Failed to send reply: %v", err)
 	}
 
+	// Attempt to proxy using an optional function
+	if nil != s.config.Proxy {
+		if _conn, ok := conn.(net.Conn); ok {
+			return s.config.Proxy(_conn, target)
+		}
+	}
+
 	// Start proxying
 	errCh := make(chan error, 2)
 	go proxy(target, req.bufConn, errCh)
